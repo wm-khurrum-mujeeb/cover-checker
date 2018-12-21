@@ -18,16 +18,16 @@ package com.naver.nid.cover.checker.model;
 import static com.naver.nid.cover.checker.model.ResultIcon.*;
 
 public enum NewCoverageCheckResult {
-	PASS(CHECK_ALL_PASS), FAIL(CHECK_ALL_FAIL), CHECK(CHECK_ALL_CONFUSE), ERROR(CHECK_ALL_ERROR);
+    PASS(CHECK_ALL_PASS), FAIL(CHECK_ALL_FAIL), CHECK(CHECK_ALL_CONFUSE), ERROR(CHECK_ALL_ERROR);
 
-	public final String icon;
+    public final String icon;
 
-	NewCoverageCheckResult(String icon) {
-		this.icon = icon;
-	}
+    NewCoverageCheckResult(String icon) {
+        this.icon = icon;
+    }
 
-	@Override
-	public String toString() {
-		return name().toLowerCase();
-	}
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 }

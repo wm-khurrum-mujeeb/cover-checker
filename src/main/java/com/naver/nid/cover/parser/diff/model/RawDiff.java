@@ -23,23 +23,23 @@ import java.util.List;
 @Data
 @Builder
 public class RawDiff {
-	public static final RawDiff END_OF_DIFF = RawDiff.builder().build();
+    public static final RawDiff END_OF_DIFF = RawDiff.builder().build();
 
-	private String fileName;
-	private FileType type;
-	private List<String> rawDiff;
+    private String fileName;
+    private FileType type;
+    private List<String> rawDiff;
 
-	public static boolean isFinish(RawDiff rd) {
-		if (rd == null) return true;
-		return rd == END_OF_DIFF;
-	}
+    public static boolean isFinish(RawDiff rd) {
+        if (rd == null) return true;
+        return rd == END_OF_DIFF;
+    }
 
-	public int size() {
-		if (isFinish(this)) return 0;
-		return rawDiff.size();
-	}
+    public int size() {
+        if (isFinish(this)) return 0;
+        return rawDiff.size();
+    }
 
-	public String getRawDiffLine(int i) {
-		return rawDiff.get(i);
-	}
+    public String getRawDiffLine(int i) {
+        return rawDiff.get(i);
+    }
 }

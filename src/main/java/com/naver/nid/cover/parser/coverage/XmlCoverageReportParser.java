@@ -33,27 +33,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public final class XmlCoverageReportParser implements CoverageReportParser {
 
-	private final ReportXmlHandler handler;
+    private final ReportXmlHandler handler;
 
-	@Override
-	public List<FileCoverageReport> parse(File reportFile) {
-		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-		try {
-			saxParserFactory.setFeature("http://xml.org/sax/features/validation", false);
-			saxParserFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
-			saxParserFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-			saxParserFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-			saxParserFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-			saxParserFactory.setValidating(false); // disable xml DTD check
-			log.debug("parse {}", reportFile.getName());
-			SAXParser saxParser = saxParserFactory.newSAXParser();
-			saxParser.parse(reportFile, handler);
-			XMLInputFactory factory = XMLInputFactory.newInstance();
-			log.debug("FACTORY: {}", factory);
+    @Override
+    public List<FileCoverageReport> parse(File reportFile) {
+        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        try {
+            saxParserFactory.setFeature("http://xml.org/sax/features/validation", false);
+            saxParserFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+            saxParserFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            saxParserFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            saxParserFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            saxParserFactory.setValidating(false); // disable xml DTD check
+            log.debug("parse {}", reportFile.getName());
+            SAXParser saxParser = saxParserFactory.newSAXParser();
+            saxParser.parse(reportFile, handler);
+            XMLInputFactory factory = XMLInputFactory.newInstance();
+            log.debug("FACTORY: {}", factory);
 
-			return handler.getReports();
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			throw new ParseException(e);
-		}
-	}
+            return handler.getReports();
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new ParseException(e);
+        }
+    }
 }

@@ -32,41 +32,41 @@ import java.util.List;
 @Slf4j
 public class GithubRawDiffReader implements RawDiffReader {
 
-	private final GithubDiffManager diffManager;
+    private final GithubDiffManager diffManager;
 
-	private Iterator<CommitFile> files;
+    private Iterator<CommitFile> files;
 
-	public GithubRawDiffReader(GithubPullRequestManager prManager) {
-		this.diffManager = prManager.diffManager();
-	}
+    public GithubRawDiffReader(GithubPullRequestManager prManager) {
+        this.diffManager = prManager.diffManager();
+    }
 
-	@Override
-	public boolean hasNext() {
-		if (files == null) {
-			try {
-				files = diffManager.getFiles().iterator();
-			} catch (IOException e) {
-				throw new ParseException("error while get file patch list", e);
-			}
-		}
-		return files.hasNext();
-	}
+    @Override
+    public boolean hasNext() {
+        if (files == null) {
+            try {
+                files = diffManager.getFiles().iterator();
+            } catch (IOException e) {
+                throw new ParseException("error while get file patch list", e);
+            }
+        }
+        return files.hasNext();
+    }
 
-	@Override
-	public RawDiff next() {
-		CommitFile file = files.next();
-		log.info("get file {}", file.getFilename());
-		List<String> lines;
-		if (file.getPatch() != null && file.getPatch().length() > 0) {
-			lines = Arrays.asList(file.getPatch().split("\r?\n"));
-		} else {
-			lines = Collections.emptyList();
-		}
-		return RawDiff.builder()
-				.fileName(file.getFilename())
-				.rawDiff(lines)
-				.type(file.getPatch() != null ? FileType.SOURCE : FileType.BINARY)
-				.build();
-	}
+    @Override
+    public RawDiff next() {
+        CommitFile file = files.next();
+        log.info("get file {}", file.getFilename());
+        List<String> lines;
+        if (file.getPatch() != null && file.getPatch().length() > 0) {
+            lines = Arrays.asList(file.getPatch().split("\r?\n"));
+        } else {
+            lines = Collections.emptyList();
+        }
+        return RawDiff.builder()
+                .fileName(file.getFilename())
+                .rawDiff(lines)
+                .type(file.getPatch() != null ? FileType.SOURCE : FileType.BINARY)
+                .build();
+    }
 
 }

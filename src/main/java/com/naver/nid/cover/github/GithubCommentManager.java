@@ -26,43 +26,43 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class GithubCommentManager {
-	private static final Logger logger = LoggerFactory.getLogger(GithubCommentManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(GithubCommentManager.class);
 
-	private IssueService issueService;
+    private IssueService issueService;
 
-	private RepositoryId repoId;
-	private int issueNumber;
+    private RepositoryId repoId;
+    private int issueNumber;
 
-	GithubCommentManager(IssueService issueService, RepositoryId repo, int issueNumber) {
-		this.issueService = issueService;
-		this.repoId = repo;
-		this.issueNumber = issueNumber;
-	}
+    GithubCommentManager(IssueService issueService, RepositoryId repo, int issueNumber) {
+        this.issueService = issueService;
+        this.repoId = repo;
+        this.issueNumber = issueNumber;
+    }
 
-	public int deleteComment(Predicate<Comment> commentPredicate) throws IOException {
-		List<Comment> comments = issueService.getComments(repoId, issueNumber);
-		int delCount = 0;
-		for (Comment c : comments) {
+    public int deleteComment(Predicate<Comment> commentPredicate) throws IOException {
+        List<Comment> comments = issueService.getComments(repoId, issueNumber);
+        int delCount = 0;
+        for (Comment c : comments) {
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("pre filtered comment {} : {}/{}", c.getUser().getLogin(), c.getId(), c.getBody());
-			}
+            if (logger.isDebugEnabled()) {
+                logger.debug("pre filtered comment {} : {}/{}", c.getUser().getLogin(), c.getId(), c.getBody());
+            }
 
-			if (!commentPredicate.test(c)) {
-				continue;
-			}
+            if (!commentPredicate.test(c)) {
+                continue;
+            }
 
-			logger.debug("delete comment {} {}", repoId, c.getId());
-			issueService.deleteComment(repoId, c.getId());
-			delCount++;
-		}
+            logger.debug("delete comment {} {}", repoId, c.getId());
+            issueService.deleteComment(repoId, c.getId());
+            delCount++;
+        }
 
-		logger.debug("delete {} comments", delCount);
-		return delCount;
-	}
+        logger.debug("delete {} comments", delCount);
+        return delCount;
+    }
 
-	public void addComment(String comment) throws IOException {
-		issueService.createComment(repoId, issueNumber, comment);
-	}
+    public void addComment(String comment) throws IOException {
+        issueService.createComment(repoId, issueNumber, comment);
+    }
 
 }

@@ -16,5 +16,5 @@
 package com.naver.nid.cover.parser.diff.model;
 
 public enum FileType {
-	SOURCE, BINARY
+    SOURCE, BINARY
 }

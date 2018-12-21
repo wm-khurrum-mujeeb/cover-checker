@@ -20,14 +20,14 @@ import com.naver.nid.cover.checker.model.NewCoverageCheckReport;
 import java.util.function.Consumer;
 
 public interface Reporter extends Consumer<NewCoverageCheckReport> {
-	
-	void report(NewCoverageCheckReport result);
 
-	default void accept(NewCoverageCheckReport result) {
-		report(result);
-	}
+    void report(NewCoverageCheckReport result);
 
-	default Reporter andThen(Reporter reporter) {
-		return result -> andThen((Consumer<NewCoverageCheckReport>) reporter).accept(result);
-	}
+    default void accept(NewCoverageCheckReport result) {
+        report(result);
+    }
+
+    default Reporter andThen(Reporter reporter) {
+        return result -> andThen((Consumer<NewCoverageCheckReport>) reporter).accept(result);
+    }
 }

@@ -15,13 +15,16 @@
  */
 package com.naver.nid.cover.parser.diff.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
  * 실제 diff 정보
- *
+ * <p>
  * git diff 에서 나온 결과에 최적화 되어 있다.
  */
 @Data
@@ -29,6 +32,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Diff {
-	private String fileName;
-	private List<DiffSection> diffSectionList;
+    private String fileName;
+    private List<DiffSection> diffSectionList;
 }

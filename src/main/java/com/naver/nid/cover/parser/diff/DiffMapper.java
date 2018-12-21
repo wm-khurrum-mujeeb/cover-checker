@@ -30,129 +30,129 @@ import java.util.regex.Pattern;
 /**
  * 1차로 파싱된 {@link RawDiff}를 {@link Diff}로 파싱
  * 단계를 나누어 공통으로 처리할 수 있는 부분을 분리
- *
  */
 @Slf4j
 public class DiffMapper implements Function<RawDiff, Diff> {
-	private static final DiffMapper DEFAULT = new DiffMapper();
-	public static DiffMapper getDefault() {
-		return DEFAULT;
-	}
+    private static final DiffMapper DEFAULT = new DiffMapper();
 
-	private static final Pattern NEW_FILE_COUNT_PATTERN = Pattern.compile("\\+([0-9]+),([0-9]+)");
-	private static final Pattern SECTION_START_PATTERN = Pattern.compile("@@ -([0-9]+),([0-9]+) \\+([0-9]+),([0-9]+) @@");
+    public static DiffMapper getDefault() {
+        return DEFAULT;
+    }
 
-	@Override
-	public Diff apply(RawDiff rawDiff) {
-		Diff diff = new Diff();
+    private static final Pattern NEW_FILE_COUNT_PATTERN = Pattern.compile("\\+([0-9]+),([0-9]+)");
+    private static final Pattern SECTION_START_PATTERN = Pattern.compile("@@ -([0-9]+),([0-9]+) \\+([0-9]+),([0-9]+) @@");
 
-		// set file name
-		Optional<String> fileName = Optional.ofNullable(rawDiff.getFileName()).map(this::removeNewFilePrefix);
-		log.info("parse diff / {}", fileName);
+    @Override
+    public Diff apply(RawDiff rawDiff) {
+        Diff diff = new Diff();
 
-		if (!fileName.isPresent()) {
-			log.error("diff parse fail");
-			rawDiff.getRawDiff().forEach(l -> log.error("{}", l));
+        // set file name
+        Optional<String> fileName = Optional.ofNullable(rawDiff.getFileName()).map(this::removeNewFilePrefix);
+        log.info("parse diff / {}", fileName);
 
-			// 실패할 경우 다음 파일을 불러옴
-			return null;
-		}
+        if (!fileName.isPresent()) {
+            log.error("diff parse fail");
+            rawDiff.getRawDiff().forEach(l -> log.error("{}", l));
 
-		diff.setFileName(fileName.get());
+            // 실패할 경우 다음 파일을 불러옴
+            return null;
+        }
 
-		// set diff detail
-		if (rawDiff.getType() == FileType.BINARY) {
-			diff.setDiffSectionList(Collections.emptyList());
-			return diff;
-		}
+        diff.setFileName(fileName.get());
 
-		Optional<List<DiffSection>> diffSectionList = getDiffSectionListFromRawDiff(rawDiff);
-		if (!diffSectionList.isPresent()) {
-			log.error("unexpected diff type {}", rawDiff);
-			return null;
-		}
+        // set diff detail
+        if (rawDiff.getType() == FileType.BINARY) {
+            diff.setDiffSectionList(Collections.emptyList());
+            return diff;
+        }
 
-		diff.setDiffSectionList(diffSectionList.get());
-		return diff;
-	}
+        Optional<List<DiffSection>> diffSectionList = getDiffSectionListFromRawDiff(rawDiff);
+        if (!diffSectionList.isPresent()) {
+            log.error("unexpected diff type {}", rawDiff);
+            return null;
+        }
 
-	private int getBodyLine(RawDiff rawDiff) {
-		for (int i = 0; i < rawDiff.size(); i++) {
-			String line = rawDiff.getRawDiffLine(i);
-			if (isSectionStart(line)) {
-				return i;
-			}
-		}
+        diff.setDiffSectionList(diffSectionList.get());
+        return diff;
+    }
 
-		return -1;
-	}
+    private int getBodyLine(RawDiff rawDiff) {
+        for (int i = 0; i < rawDiff.size(); i++) {
+            String line = rawDiff.getRawDiffLine(i);
+            if (isSectionStart(line)) {
+                return i;
+            }
+        }
 
-	private boolean isSectionStart(String currLine) {
-		Matcher matcher = SECTION_START_PATTERN.matcher(currLine.trim());
-		return matcher.find();
-	}
+        return -1;
+    }
 
-	private boolean isEof(String line) {
-		return line.contains("\\ No newline at end of file");
-	}
+    private boolean isSectionStart(String currLine) {
+        Matcher matcher = SECTION_START_PATTERN.matcher(currLine.trim());
+        return matcher.find();
+    }
 
-	private String removeNewFilePrefix(String path) {
-		if (path.startsWith("b/")) {
-			path = path.replaceFirst("b/", "");
-		}
-		return path;
-	}
+    private boolean isEof(String line) {
+        return line.contains("\\ No newline at end of file");
+    }
 
-	private Optional<List<DiffSection>> getDiffSectionListFromRawDiff(RawDiff rawDiff) {
-		List<DiffSection> diffSectionList = new ArrayList<>();
-		DiffSection section = null;
+    private String removeNewFilePrefix(String path) {
+        if (path.startsWith("b/")) {
+            path = path.replaceFirst("b/", "");
+        }
+        return path;
+    }
 
-		// find modified lines
-		int baseLineNum = -1;
-		int lineCnt = -1;
-		int bodyLine = getBodyLine(rawDiff);
-		if (bodyLine == -1) {
-			log.warn("unknown diff pattern {}", rawDiff.getRawDiff());
-			return Optional.empty();
-		}
+    private Optional<List<DiffSection>> getDiffSectionListFromRawDiff(RawDiff rawDiff) {
+        List<DiffSection> diffSectionList = new ArrayList<>();
+        DiffSection section = null;
 
-		for (int i = bodyLine; i < rawDiff.size(); i++) {
-			String currLine = rawDiff.getRawDiffLine(i);
-			log.debug("parse line {}", currLine);
-			if (isEof(currLine)) continue;
-			if (isSectionStart(currLine)) {
+        // find modified lines
+        int baseLineNum = -1;
+        int lineCnt = -1;
+        int bodyLine = getBodyLine(rawDiff);
+        if (bodyLine == -1) {
+            log.warn("unknown diff pattern {}", rawDiff.getRawDiff());
+            return Optional.empty();
+        }
 
-				Matcher matcher = NEW_FILE_COUNT_PATTERN.matcher(currLine);
-				if (!matcher.find()) {
-					log.error("not expect pattern {}", currLine);
-					throw new ParseException("not expected pattern");
-				}
-				baseLineNum = Integer.parseInt(matcher.group(1));
-				lineCnt = 0;
+        for (int i = bodyLine; i < rawDiff.size(); i++) {
+            String currLine = rawDiff.getRawDiffLine(i);
+            log.debug("parse line {}", currLine);
+            if (isEof(currLine)) continue;
+            if (isSectionStart(currLine)) {
 
-				if (section != null) {
-					diffSectionList.add(section);
-				}
-				section = new DiffSection();
-			} else if (currLine.length() > 0) { // 완전히 빈 라인은 확인하지 않는다.
-				Line line = Line.builder()
-						.type(ModifyType.of(currLine.charAt(0)))
-						.body(currLine.substring(1)) // + / - 제거
-						.lineNumber(baseLineNum + lineCnt).build();
-				if (section == null) {
-					log.error("section parse first {}", currLine);
-					throw new ParseException(new IllegalStateException("section not found"));
-				}
-				section.addLine(line);
-				if (line.getType() != ModifyType.DEL) lineCnt++;
-			}
-		}
+                Matcher matcher = NEW_FILE_COUNT_PATTERN.matcher(currLine);
+                if (!matcher.find()) {
+                    log.error("not expect pattern {}", currLine);
+                    throw new ParseException("not expected pattern");
+                }
+                baseLineNum = Integer.parseInt(matcher.group(1));
+                lineCnt = 0;
 
-		if (section != null) {
-			diffSectionList.add(section); // 마지막 섹션 추가
-		}
+                if (section != null) {
+                    diffSectionList.add(section);
+                }
+                section = new DiffSection();
+            } else if (currLine.length() > 0) { // 완전히 빈 라인은 확인하지 않는다.
+                Line line = Line.builder()
+                        .type(ModifyType.of(currLine.charAt(0)))
+                        .body(currLine.substring(1)) // + / - 제거
+                        .lineNumber(baseLineNum + lineCnt).build();
+                if (section == null) {
+                    log.error("section parse first {}", currLine);
+                    throw new ParseException(new IllegalStateException("section not found"));
+                }
+                section.addLine(line);
+                if (line.getType() != ModifyType.DEL) lineCnt++;
+            }
+        }
 
-		return Optional.of(diffSectionList);
-	}
+        if (section != null) {
+            diffSectionList.add(section); // 마지막 섹션 추가
+        }
+
+        return Optional.of(diffSectionList);
+    }
 
 }

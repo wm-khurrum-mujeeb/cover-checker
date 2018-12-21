@@ -19,15 +19,16 @@ package com.naver.nid.cover.checker.model;
  * 결과 icon 을 정의한 상수 클래스
  */
 public class ResultIcon {
-	public static final String CHECK_FILE_PASS = ":large_blue_circle:";
-	public static final String CHECK_FILE_FAIL = ":red_circle:";
+    public static final String CHECK_FILE_PASS = ":large_blue_circle:";
+    public static final String CHECK_FILE_FAIL = ":red_circle:";
 
 
-	public static final String CHECK_ALL_PASS = ":heart_eyes:";
-	public static final String CHECK_ALL_FAIL = ":disappointed:";
-	public static final String CHECK_ALL_CONFUSE = ":confused:";
-	public static final String CHECK_ALL_ERROR = ":fearful:";
+    public static final String CHECK_ALL_PASS = ":heart_eyes:";
+    public static final String CHECK_ALL_FAIL = ":disappointed:";
+    public static final String CHECK_ALL_CONFUSE = ":confused:";
+    public static final String CHECK_ALL_ERROR = ":fearful:";
 
 
-	private ResultIcon() {}
+    private ResultIcon() {
+    }
 }

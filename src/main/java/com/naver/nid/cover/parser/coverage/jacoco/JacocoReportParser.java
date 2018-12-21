@@ -29,16 +29,16 @@ import java.util.List;
 @Slf4j
 public class JacocoReportParser implements CoverageReportParser {
 
-	@Override
-	public List<FileCoverageReport> parse(File reportFile) {
-		String fileName = reportFile.getName();
-		String ext = fileName.substring(fileName.lastIndexOf('.') + 1);
-		if (!reportFile.isDirectory() && "xml".equalsIgnoreCase(ext)) {
-			log.debug("parse by xml report {}", fileName);
-			return new XmlCoverageReportParser(new JacocoXmlReportHandler()).parse(reportFile);
-		} else {
-			log.debug("parse by html report {}", fileName);
-			return new JacocoHtmlReportParser(f -> f.getName().endsWith(".java.html")).parse(reportFile);
-		}
-	}
+    @Override
+    public List<FileCoverageReport> parse(File reportFile) {
+        String fileName = reportFile.getName();
+        String ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+        if (!reportFile.isDirectory() && "xml".equalsIgnoreCase(ext)) {
+            log.debug("parse by xml report {}", fileName);
+            return new XmlCoverageReportParser(new JacocoXmlReportHandler()).parse(reportFile);
+        } else {
+            log.debug("parse by html report {}", fileName);
+            return new JacocoHtmlReportParser(f -> f.getName().endsWith(".java.html")).parse(reportFile);
+        }
+    }
 }

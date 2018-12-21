@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FileCoverageReport {
-	private String fileName;
-	private String type;
-	private List<LineCoverageReport> lineCoverageReportList;
+    private String fileName;
+    private String type;
+    private List<LineCoverageReport> lineCoverageReportList;
 
-	@Override
-	public String toString() {
-		return String.format("%s %s%n%s", fileName, type, lineCoverageReportList.stream().map(LineCoverageReport::toString).collect(Collectors.joining("\n")));
-	}
+    @Override
+    public String toString() {
+        return String.format("%s %s%n%s", fileName, type, lineCoverageReportList.stream().map(LineCoverageReport::toString).collect(Collectors.joining("\n")));
+    }
 }

@@ -16,11 +16,11 @@
 package com.naver.nid.cover.parser.diff.model;
 
 public enum ModifyType {
-	ADD, DEL, NOTHING;
+    ADD, DEL, NOTHING;
 
-	public static ModifyType of(char c) {
-		if(c == '+') return ADD;
-		if(c == '-') return DEL;
-		return NOTHING;
-	}
+    public static ModifyType of(char c) {
+        if (c == '+') return ADD;
+        if (c == '-') return DEL;
+        return NOTHING;
+    }
 }

@@ -25,13 +25,13 @@ import java.util.Iterator;
  */
 public interface RawDiffReader extends Iterator<RawDiff> {
 
-	/**
-	 * 현재 iterator를 {@link Iterable}로 감싼다.
-	 * iterable의 여러 기능 ({@code foreach}, {@link java.util.Spliterator} 생성)을 사용할 수 있다.
-	 *
-	 * @return
-	 */
-	default Iterable<RawDiff> toIterable() {
-		return () -> this;
-	}
+    /**
+     * 현재 iterator를 {@link Iterable}로 감싼다.
+     * iterable의 여러 기능 ({@code foreach}, {@link java.util.Spliterator} 생성)을 사용할 수 있다.
+     *
+     * @return
+     */
+    default Iterable<RawDiff> toIterable() {
+        return () -> this;
+    }
 }

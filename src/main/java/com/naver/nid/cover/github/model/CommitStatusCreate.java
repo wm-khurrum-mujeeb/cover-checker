@@ -21,12 +21,12 @@ import lombok.Data;
 @Data
 @Builder(builderClassName = "Builder")
 public class CommitStatusCreate {
-	private final State state;
-	private String targetUrl;
-	private String description;
-	private String context;
+    private final State state;
+    private String targetUrl;
+    private String description;
+    private String context;
 
-	public enum State {
-		success, failure, pending, error
-	}
+    public enum State {
+        success, failure, pending, error
+    }
 }

@@ -25,18 +25,18 @@ import java.util.List;
 
 public interface CoverageReportParser {
 
-	List<FileCoverageReport> parse(File reportFile);
+    List<FileCoverageReport> parse(File reportFile);
 
-	default List<FileCoverageReport> parse(String reportPath) {
-		return parse(new File(reportPath));
-	}
+    default List<FileCoverageReport> parse(String reportPath) {
+        return parse(new File(reportPath));
+    }
 
-	default List<FileCoverageReport> parse(URL reportPath) {
-		try {
-			return parse(new File(reportPath.toURI()));
-		} catch (URISyntaxException e) {
-			throw new ParseException(e);
-		}
-	}
+    default List<FileCoverageReport> parse(URL reportPath) {
+        try {
+            return parse(new File(reportPath.toURI()));
+        } catch (URISyntaxException e) {
+            throw new ParseException(e);
+        }
+    }
 
 }

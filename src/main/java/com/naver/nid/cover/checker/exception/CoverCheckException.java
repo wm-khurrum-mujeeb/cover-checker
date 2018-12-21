@@ -16,23 +16,23 @@
 package com.naver.nid.cover.checker.exception;
 
 public class CoverCheckException extends RuntimeException {
-	public CoverCheckException() {
-		super();
-	}
+    public CoverCheckException() {
+        super();
+    }
 
-	public CoverCheckException(String message) {
-		super(message);
-	}
+    public CoverCheckException(String message) {
+        super(message);
+    }
 
-	public CoverCheckException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public CoverCheckException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public CoverCheckException(Throwable cause) {
-		super(cause);
-	}
+    public CoverCheckException(Throwable cause) {
+        super(cause);
+    }
 
-	protected CoverCheckException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+    protected CoverCheckException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

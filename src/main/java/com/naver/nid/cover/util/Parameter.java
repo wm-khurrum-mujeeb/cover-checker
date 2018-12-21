@@ -23,14 +23,14 @@ import lombok.ToString;
 @ToString
 @Builder
 public class Parameter {
-	private int threshold;
-	private int fileThreshold;
-	private String githubToken;
-	private String diffPath;
-	private String coveragePath;
-	private String githubUrl;
-	private String repo;
-	private String diffType;
-	private int prNumber;
-	private String coverageType;
+    private int threshold;
+    private int fileThreshold;
+    private String githubToken;
+    private String diffPath;
+    private String coveragePath;
+    private String githubUrl;
+    private String repo;
+    private String diffType;
+    private int prNumber;
+    private String coverageType;
 }

@@ -25,21 +25,21 @@ import static com.naver.nid.cover.checker.model.ResultIcon.CHECK_FILE_PASS;
 @Builder
 public class NewCoveredFile {
 
-	private String name;
-	private int addedLine;
-	private int addedCoverLine;
-	private int threshold;
+    private String name;
+    private int addedLine;
+    private int addedCoverLine;
+    private int threshold;
 
-	public int getCoverage() {
-		if(addedLine == 0) return 0;
-		return Math.floorDiv(100 * addedCoverLine, addedLine);
-	}
+    public int getCoverage() {
+        if (addedLine == 0) return 0;
+        return Math.floorDiv(100 * addedCoverLine, addedLine);
+    }
 
-	public boolean isPass() {
-		return getCoverage() >= threshold;
-	}
+    public boolean isPass() {
+        return getCoverage() >= threshold;
+    }
 
-	public String getIcon() {
-		return isPass()? CHECK_FILE_PASS : CHECK_FILE_FAIL;
-	}
+    public String getIcon() {
+        return isPass() ? CHECK_FILE_PASS : CHECK_FILE_FAIL;
+    }
 }

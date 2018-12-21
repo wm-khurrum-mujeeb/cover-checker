@@ -27,44 +27,44 @@ import java.io.IOException;
 
 public class GithubPullRequestManager {
 
-	private final GitHubClient ghClient;
-	private final RepositoryId repoId;
-	private final PullRequest pr;
-	private PullRequestService prService;
-	private int prNumber;
+    private final GitHubClient ghClient;
+    private final RepositoryId repoId;
+    private final PullRequest pr;
+    private PullRequestService prService;
+    private int prNumber;
 
-	public GithubPullRequestManager(String host, String oauthToken, String repoName, int prNumber) {
-		this(new GitHubClient(host).setOAuth2Token(oauthToken), repoName, prNumber);
-	}
+    public GithubPullRequestManager(String host, String oauthToken, String repoName, int prNumber) {
+        this(new GitHubClient(host).setOAuth2Token(oauthToken), repoName, prNumber);
+    }
 
-	public GithubPullRequestManager(GitHubClient github, String repoName, int prNumber) {
-		this.ghClient = github;
-		this.prNumber = prNumber;
+    public GithubPullRequestManager(GitHubClient github, String repoName, int prNumber) {
+        this.ghClient = github;
+        this.prNumber = prNumber;
 
-		String[] repoNames = repoName.split("/");
-		repoId = new RepositoryId(repoNames[0], repoNames[1]);
+        String[] repoNames = repoName.split("/");
+        repoId = new RepositoryId(repoNames[0], repoNames[1]);
 
-		prService = new PullRequestService(ghClient);
-		try {
-			pr = prService.getPullRequest(repoId, this.prNumber);
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
-		}
-	}
+        prService = new PullRequestService(ghClient);
+        try {
+            pr = prService.getPullRequest(repoId, this.prNumber);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
-	public User getUser() throws IOException {
-		return new UserService(ghClient).getUser();
-	}
+    public User getUser() throws IOException {
+        return new UserService(ghClient).getUser();
+    }
 
-	public GithubCommentManager commentManager() {
-		return new GithubCommentManager(new IssueService(ghClient), repoId, pr.getNumber());
-	}
+    public GithubCommentManager commentManager() {
+        return new GithubCommentManager(new IssueService(ghClient), repoId, pr.getNumber());
+    }
 
-	public GithubStatusManager statusManager() {
-		return new GithubStatusManager(ghClient, repoId, pr.getHead().getSha());
-	}
+    public GithubStatusManager statusManager() {
+        return new GithubStatusManager(ghClient, repoId, pr.getHead().getSha());
+    }
 
-	public GithubDiffManager diffManager() {
-		return new GithubDiffManager(prService, repoId, prNumber);
-	}
+    public GithubDiffManager diffManager() {
+        return new GithubDiffManager(prService, repoId, prNumber);
+    }
 }

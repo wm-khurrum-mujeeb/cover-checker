@@ -33,58 +33,58 @@ import java.util.List;
  * Thread non-safe
  */
 public class FileRawDiffReader implements RawDiffReader {
-	private static final Logger logger = LoggerFactory.getLogger(FileRawDiffReader.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileRawDiffReader.class);
 
-	private BufferedReader reader;
-	private String beforeHeader;
+    private BufferedReader reader;
+    private String beforeHeader;
 
-	public FileRawDiffReader(String path) {
-		try {
-			this.reader = new BufferedReader(new FileReader(path));
-			beforeHeader = reader.readLine();
-		} catch (IOException e) {
-			throw new ParseException(e);
-		}
-	}
+    public FileRawDiffReader(String path) {
+        try {
+            this.reader = new BufferedReader(new FileReader(path));
+            beforeHeader = reader.readLine();
+        } catch (IOException e) {
+            throw new ParseException(e);
+        }
+    }
 
-	public FileRawDiffReader(BufferedReader reader) {
-		try {
-			this.reader = reader;
-			beforeHeader = reader.readLine();
-		} catch (IOException e) {
-			throw new ParseException(e);
-		}
-	}
+    public FileRawDiffReader(BufferedReader reader) {
+        try {
+            this.reader = reader;
+            beforeHeader = reader.readLine();
+        } catch (IOException e) {
+            throw new ParseException(e);
+        }
+    }
 
-	@Override
-	public boolean hasNext() {
-		return beforeHeader != null;
-	}
+    @Override
+    public boolean hasNext() {
+        return beforeHeader != null;
+    }
 
-	@Override
-	public RawDiff next() {
-		try {
-			List<String> list = new ArrayList<>();
-			if (!hasNext()) return RawDiff.END_OF_DIFF; // 완료 됨
+    @Override
+    public RawDiff next() {
+        try {
+            List<String> list = new ArrayList<>();
+            if (!hasNext()) return RawDiff.END_OF_DIFF; // 완료 됨
 
-			String[] parsed = beforeHeader.split(" ");
-			RawDiff.RawDiffBuilder builder = RawDiff.builder().fileName(parsed[parsed.length-1]);
+            String[] parsed = beforeHeader.split(" ");
+            RawDiff.RawDiffBuilder builder = RawDiff.builder().fileName(parsed[parsed.length - 1]);
 
-			String temp = reader.readLine();
-			logger.debug("readline : {}", temp);
-			while (!temp.contains("diff --git ")) {
-				list.add(temp);
-				temp = reader.readLine();
-				logger.debug("readline : {}", temp);
-				if (temp == null) {
-					break;
-				}
-			}
-			beforeHeader = temp;
-			builder.type(list.stream().anyMatch(l -> l.contains("Binary files"))? FileType.BINARY: FileType.SOURCE);
-			return builder.rawDiff(list).build();
-		} catch (Exception e) {
-			throw new ParseException(e);
-		}
-	}
+            String temp = reader.readLine();
+            logger.debug("readline : {}", temp);
+            while (!temp.contains("diff --git ")) {
+                list.add(temp);
+                temp = reader.readLine();
+                logger.debug("readline : {}", temp);
+                if (temp == null) {
+                    break;
+                }
+            }
+            beforeHeader = temp;
+            builder.type(list.stream().anyMatch(l -> l.contains("Binary files")) ? FileType.BINARY : FileType.SOURCE);
+            return builder.rawDiff(list).build();
+        } catch (Exception e) {
+            throw new ParseException(e);
+        }
+    }
 }

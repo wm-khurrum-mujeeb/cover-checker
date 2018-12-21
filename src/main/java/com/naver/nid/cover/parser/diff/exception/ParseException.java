@@ -18,15 +18,15 @@ package com.naver.nid.cover.parser.diff.exception;
 
 public class ParseException extends RuntimeException {
 
-	public ParseException(Throwable e) {
-		super(e);
-	}
+    public ParseException(Throwable e) {
+        super(e);
+    }
 
-	public ParseException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public ParseException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public ParseException(String msg) {
-		super(msg);
-	}
+    public ParseException(String msg) {
+        super(msg);
+    }
 }

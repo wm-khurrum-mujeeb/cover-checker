@@ -30,67 +30,67 @@ import java.util.Map;
 @Slf4j
 public class JacocoXmlReportHandler extends ReportXmlHandler {
 
-	private String pkgPath;
-	private Map<String, FileCoverageReport> reportMap = new HashMap<>();
-	private FileCoverageReport currentFile;
-	private List<LineCoverageReport> lineReports;
+    private String pkgPath;
+    private Map<String, FileCoverageReport> reportMap = new HashMap<>();
+    private FileCoverageReport currentFile;
+    private List<LineCoverageReport> lineReports;
 
-	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) {
-		if (localName.equals("")) localName = qName;
-		switch (localName) {
-			case "package":
-				pkgPath = attributes.getValue("name");
-				log.debug("found new package {}", pkgPath);
-				break;
-			case "sourcefile":
-				currentFile = new FileCoverageReport();
-				String name = attributes.getValue("name");
-				currentFile.setFileName(pkgPath + "/" + name);
-				currentFile.setType(name.substring(name.indexOf('.') + 1));
-				log.debug("found new file {}", currentFile.getFileName());
-				lineReports = new ArrayList<>();
-				break;
-			case "line":
-				LineCoverageReport lineReport = new LineCoverageReport();
-				lineReport.setLineNum(Integer.parseInt(attributes.getValue("nr")));
-				lineReport.setStatus(getLineStatus(attributes));
-				lineReport.setLineContent("");
-				log.debug("found new line {}[{}]", lineReport.getLineNum(), lineReport.getStatus());
-				lineReports.add(lineReport);
-				break;
-			default:
-				// ignore other tags
-				break;
-		}
-	}
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
+        if (localName.equals("")) localName = qName;
+        switch (localName) {
+            case "package":
+                pkgPath = attributes.getValue("name");
+                log.debug("found new package {}", pkgPath);
+                break;
+            case "sourcefile":
+                currentFile = new FileCoverageReport();
+                String name = attributes.getValue("name");
+                currentFile.setFileName(pkgPath + "/" + name);
+                currentFile.setType(name.substring(name.indexOf('.') + 1));
+                log.debug("found new file {}", currentFile.getFileName());
+                lineReports = new ArrayList<>();
+                break;
+            case "line":
+                LineCoverageReport lineReport = new LineCoverageReport();
+                lineReport.setLineNum(Integer.parseInt(attributes.getValue("nr")));
+                lineReport.setStatus(getLineStatus(attributes));
+                lineReport.setLineContent("");
+                log.debug("found new line {}[{}]", lineReport.getLineNum(), lineReport.getStatus());
+                lineReports.add(lineReport);
+                break;
+            default:
+                // ignore other tags
+                break;
+        }
+    }
 
-	@Override
-	public void endElement(String uri, String localName, String qName) {
-		if (localName.equals("")) localName = qName;
-		if (localName.equals("sourcefile")) {
-			currentFile.setLineCoverageReportList(lineReports);
-			reportMap.put(currentFile.getFileName(), currentFile);
-			log.debug("save file map {}", currentFile.getFileName());
-		}
-	}
+    @Override
+    public void endElement(String uri, String localName, String qName) {
+        if (localName.equals("")) localName = qName;
+        if (localName.equals("sourcefile")) {
+            currentFile.setLineCoverageReportList(lineReports);
+            reportMap.put(currentFile.getFileName(), currentFile);
+            log.debug("save file map {}", currentFile.getFileName());
+        }
+    }
 
-	private CoverageStatus getLineStatus(Attributes attributes) {
-		int missInstruction = Integer.parseInt(attributes.getValue("mi"));
-		int missBranch = Integer.parseInt(attributes.getValue("mb"));
-		int coverBranch = Integer.parseInt(attributes.getValue("cb"));
+    private CoverageStatus getLineStatus(Attributes attributes) {
+        int missInstruction = Integer.parseInt(attributes.getValue("mi"));
+        int missBranch = Integer.parseInt(attributes.getValue("mb"));
+        int coverBranch = Integer.parseInt(attributes.getValue("cb"));
 
-		if (missInstruction == 0 && missBranch == 0) {
-			return CoverageStatus.COVERED;
-		} else if (missBranch > 0 && coverBranch > 0) {
-			return CoverageStatus.CONDITION;
-		}
+        if (missInstruction == 0 && missBranch == 0) {
+            return CoverageStatus.COVERED;
+        } else if (missBranch > 0 && coverBranch > 0) {
+            return CoverageStatus.CONDITION;
+        }
 
-		return CoverageStatus.UNCOVERED;
-	}
+        return CoverageStatus.UNCOVERED;
+    }
 
-	@Override
-	public List<FileCoverageReport> getReports() {
-		return new ArrayList<>(reportMap.values());
-	}
+    @Override
+    public List<FileCoverageReport> getReports() {
+        return new ArrayList<>(reportMap.values());
+    }
 }

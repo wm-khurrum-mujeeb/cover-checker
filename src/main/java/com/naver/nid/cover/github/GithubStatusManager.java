@@ -24,18 +24,18 @@ import java.io.IOException;
 
 public class GithubStatusManager {
 
-	private GitHubClient client;
-	private RepositoryId repoId;
-	private String sha;
+    private GitHubClient client;
+    private RepositoryId repoId;
+    private String sha;
 
-	GithubStatusManager(GitHubClient client, RepositoryId repoId, String sha) {
-		this.client = client;
-		this.repoId = repoId;
-		this.sha = sha;
-	}
+    GithubStatusManager(GitHubClient client, RepositoryId repoId, String sha) {
+        this.client = client;
+        this.repoId = repoId;
+        this.sha = sha;
+    }
 
-	public void setStatus(CommitStatusCreate status) throws IOException {
-		String url = String.format("/repos/%s/statuses/%s", repoId.generateId(), sha);
-		client.post(url, status, CommitStatus.class);
-	}
+    public void setStatus(CommitStatusCreate status) throws IOException {
+        String url = String.format("/repos/%s/statuses/%s", repoId.generateId(), sha);
+        client.post(url, status, CommitStatus.class);
+    }
 }

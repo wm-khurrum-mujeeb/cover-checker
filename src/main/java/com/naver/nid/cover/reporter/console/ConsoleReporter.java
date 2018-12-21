@@ -21,14 +21,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ConsoleReporter implements Reporter {
-	private static final Logger logger = LoggerFactory.getLogger(ConsoleReporter.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConsoleReporter.class);
 
-	@Override
-	public void report(NewCoverageCheckReport result) {
-		logger.info("coverage check result");
-		logger.info("{}/{} {}", result.getCoveredNewLine(), result.getTotalNewLine(), result.getCoverage());
-		result.getCoveredFilesInfo().stream()
-				.filter(f -> f.getAddedLine() > 0)
-				.forEach(f -> logger.info("{} {}/{} {}", f.getName(), f.getAddedCoverLine(), f.getAddedLine(), f.getCoverage()));
-	}
+    @Override
+    public void report(NewCoverageCheckReport result) {
+        logger.info("coverage check result");
+        logger.info("{}/{} {}", result.getCoveredNewLine(), result.getTotalNewLine(), result.getCoverage());
+        result.getCoveredFilesInfo().stream()
+                .filter(f -> f.getAddedLine() > 0)
+                .forEach(f -> logger.info("{} {}/{} {}", f.getName(), f.getAddedCoverLine(), f.getAddedLine(), f.getCoverage()));
+    }
 }

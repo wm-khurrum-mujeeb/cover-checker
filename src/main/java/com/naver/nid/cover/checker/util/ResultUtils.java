@@ -21,12 +21,16 @@ import com.naver.nid.cover.github.model.CommitStatusCreate;
 
 public class ResultUtils {
 
-	public static CommitStatusCreate.State resultToGithubState(NewCoverageCheckResult result) {
-		switch (result) {
-			case CHECK: return CommitStatusCreate.State.pending;
-			case PASS: return CommitStatusCreate.State.success;
-			case FAIL: return CommitStatusCreate.State.failure;
-			default: return CommitStatusCreate.State.error;
-		}
-	}
+    public static CommitStatusCreate.State resultToGithubState(NewCoverageCheckResult result) {
+        switch (result) {
+            case CHECK:
+                return CommitStatusCreate.State.pending;
+            case PASS:
+                return CommitStatusCreate.State.success;
+            case FAIL:
+                return CommitStatusCreate.State.failure;
+            default:
+                return CommitStatusCreate.State.error;
+        }
+    }
 }

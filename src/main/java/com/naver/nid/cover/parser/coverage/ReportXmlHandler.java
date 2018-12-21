@@ -21,5 +21,5 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.List;
 
 public abstract class ReportXmlHandler extends DefaultHandler {
-	public abstract List<FileCoverageReport> getReports();
+    public abstract List<FileCoverageReport> getReports();
 }

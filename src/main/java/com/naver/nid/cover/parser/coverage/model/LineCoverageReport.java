@@ -19,12 +19,12 @@ import lombok.Data;
 
 @Data
 public class LineCoverageReport {
-	private int lineNum;
-	private String lineContent;
-	private CoverageStatus status;
+    private int lineNum;
+    private String lineContent;
+    private CoverageStatus status;
 
-	@Override
-	public String toString() {
-		return String.format("%d(%s):%s", lineNum, status, lineContent);
-	}
+    @Override
+    public String toString() {
+        return String.format("%d(%s):%s", lineNum, status, lineContent);
+    }
 }

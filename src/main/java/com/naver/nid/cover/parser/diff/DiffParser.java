@@ -24,18 +24,18 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public final class DiffParser {
 
-	private final DiffMapper diffMapper;
+    private final DiffMapper diffMapper;
 
-	public DiffParser() {
-		this(DiffMapper.getDefault());
-	}
+    public DiffParser() {
+        this(DiffMapper.getDefault());
+    }
 
-	public DiffParser(DiffMapper diffMapper) {
-		this.diffMapper = diffMapper;
-		log.debug("init with mapper {}", diffMapper.getClass().getSimpleName());
-	}
+    public DiffParser(DiffMapper diffMapper) {
+        this.diffMapper = diffMapper;
+        log.debug("init with mapper {}", diffMapper.getClass().getSimpleName());
+    }
 
-	public Stream<Diff> parse(RawDiffReader rawDiffReader) {
-		return StreamSupport.stream(rawDiffReader.toIterable().spliterator(), false).map(diffMapper);
-	}
+    public Stream<Diff> parse(RawDiffReader rawDiffReader) {
+        return StreamSupport.stream(rawDiffReader.toIterable().spliterator(), false).map(diffMapper);
+    }
 }

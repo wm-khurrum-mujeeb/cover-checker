@@ -37,89 +37,89 @@ import java.util.stream.Collectors;
  * jacoco html report를 파싱
  */
 public class JacocoHtmlReportParser implements CoverageReportParser {
-	private static final Logger logger = LoggerFactory.getLogger(JacocoHtmlReportParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(JacocoHtmlReportParser.class);
 
-	private final Predicate<File> reportFileChecker;
+    private final Predicate<File> reportFileChecker;
 
-	public JacocoHtmlReportParser(Predicate<File> reportExt) {
-		reportFileChecker = reportExt;
-	}
+    public JacocoHtmlReportParser(Predicate<File> reportExt) {
+        reportFileChecker = reportExt;
+    }
 
-	@Override
-	public List<FileCoverageReport> parse(File reportFile) {
-		logger.debug("parse {}", reportFile.getAbsolutePath());
-		if (reportFile.isFile()) {
-			if (reportFileChecker.test(reportFile)) {
-				return Collections.singletonList(parseFile(reportFile));
-			} else {
-				throw new ParseException(String.format("wrong file type %s", reportFile.getName()));
-			}
-		} else {
-			return parseDirectory(reportFile);
-		}
-	}
+    @Override
+    public List<FileCoverageReport> parse(File reportFile) {
+        logger.debug("parse {}", reportFile.getAbsolutePath());
+        if (reportFile.isFile()) {
+            if (reportFileChecker.test(reportFile)) {
+                return Collections.singletonList(parseFile(reportFile));
+            } else {
+                throw new ParseException(String.format("wrong file type %s", reportFile.getName()));
+            }
+        } else {
+            return parseDirectory(reportFile);
+        }
+    }
 
-	private List<FileCoverageReport> parseDirectory(File reportDirectory) {
-		String dirPath = reportDirectory.getAbsolutePath();
-		List<FileCoverageReport> reports = new ArrayList<>();
-		try {
-			Files.walkFileTree(Paths.get(dirPath), new SimpleFileVisitor<Path>() {
-				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-					File currFile = file.toFile();
-					if (reportFileChecker.test(currFile)) {
-						reports.add(parseFile(currFile));
-					}
-					return FileVisitResult.CONTINUE;
-				}
-			});
-		} catch (IOException e) {
-			throw new ParseException(e);
-		}
+    private List<FileCoverageReport> parseDirectory(File reportDirectory) {
+        String dirPath = reportDirectory.getAbsolutePath();
+        List<FileCoverageReport> reports = new ArrayList<>();
+        try {
+            Files.walkFileTree(Paths.get(dirPath), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    File currFile = file.toFile();
+                    if (reportFileChecker.test(currFile)) {
+                        reports.add(parseFile(currFile));
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            throw new ParseException(e);
+        }
 
-		return reports;
-	}
+        return reports;
+    }
 
-	private FileCoverageReport parseFile(File file) {
-		try {
-			Document doc = Jsoup.parse(file, "UTF-8");
+    private FileCoverageReport parseFile(File file) {
+        try {
+            Document doc = Jsoup.parse(file, "UTF-8");
 
 
-			FileCoverageReport fileReport = new FileCoverageReport();
+            FileCoverageReport fileReport = new FileCoverageReport();
 
-			String filePath = file.getCanonicalPath();
-			logger.debug("parse {}", filePath);
-			String[] split = filePath.split("/");
-			String sourcePath = split[split.length - 2].replace(".", "/") + "/" + split[split.length - 1].replace(".html", "");
-			fileReport.setFileName(sourcePath);
-			fileReport.setType(file.getName().split("\\.")[1]);
+            String filePath = file.getCanonicalPath();
+            logger.debug("parse {}", filePath);
+            String[] split = filePath.split("/");
+            String sourcePath = split[split.length - 2].replace(".", "/") + "/" + split[split.length - 1].replace(".html", "");
+            fileReport.setFileName(sourcePath);
+            fileReport.setType(file.getName().split("\\.")[1]);
 
-			List<LineCoverageReport> lineCoverageReports = doc.select(".linenums span").stream()
-					.flatMap(e -> e.getAllElements().stream())
-					.peek(e -> logger.debug("curr elements {}", e.wholeText()))
-					.map(e -> {
-						LineCoverageReport lineCoverageReport = new LineCoverageReport();
-						lineCoverageReport.setLineNum(Integer.parseInt(e.id().substring(1))); // L$(lineNum)
-						lineCoverageReport.setLineContent(e.text());
-						lineCoverageReport.setStatus(classNamesToStatus(e.classNames()));
+            List<LineCoverageReport> lineCoverageReports = doc.select(".linenums span").stream()
+                    .flatMap(e -> e.getAllElements().stream())
+                    .peek(e -> logger.debug("curr elements {}", e.wholeText()))
+                    .map(e -> {
+                        LineCoverageReport lineCoverageReport = new LineCoverageReport();
+                        lineCoverageReport.setLineNum(Integer.parseInt(e.id().substring(1))); // L$(lineNum)
+                        lineCoverageReport.setLineContent(e.text());
+                        lineCoverageReport.setStatus(classNamesToStatus(e.classNames()));
 
-						return lineCoverageReport;
-					}).sorted(Comparator.comparingInt(LineCoverageReport::getLineNum))
-					.collect(Collectors.toList());
+                        return lineCoverageReport;
+                    }).sorted(Comparator.comparingInt(LineCoverageReport::getLineNum))
+                    .collect(Collectors.toList());
 
-			fileReport.setLineCoverageReportList(lineCoverageReports);
+            fileReport.setLineCoverageReportList(lineCoverageReports);
 
-			return fileReport;
-		} catch (IOException e) {
-			throw new ParseException("error on file read", e);
-		}
-	}
+            return fileReport;
+        } catch (IOException e) {
+            throw new ParseException("error on file read", e);
+        }
+    }
 
-	private CoverageStatus classNamesToStatus(Set<String> className) {
-		if (className.contains("fc")) return CoverageStatus.COVERED;
-		if (className.contains("nc")) return CoverageStatus.UNCOVERED;
-		if (className.contains("pc")) return CoverageStatus.CONDITION;
+    private CoverageStatus classNamesToStatus(Set<String> className) {
+        if (className.contains("fc")) return CoverageStatus.COVERED;
+        if (className.contains("nc")) return CoverageStatus.UNCOVERED;
+        if (className.contains("pc")) return CoverageStatus.CONDITION;
 
-		return CoverageStatus.NOTHING;
-	}
+        return CoverageStatus.NOTHING;
+    }
 }

@@ -26,19 +26,19 @@ import java.util.List;
 @Slf4j
 public class GithubDiffManager {
 
-	private PullRequestService prService;
-	private RepositoryId repoId;
-	private int prNumber;
+    private PullRequestService prService;
+    private RepositoryId repoId;
+    private int prNumber;
 
-	GithubDiffManager(PullRequestService prService, RepositoryId repoId, int prNumber) {
-		this.prService = prService;
-		this.repoId = repoId;
-		this.prNumber = prNumber;
-	}
+    GithubDiffManager(PullRequestService prService, RepositoryId repoId, int prNumber) {
+        this.prService = prService;
+        this.repoId = repoId;
+        this.prNumber = prNumber;
+    }
 
-	public List<CommitFile> getFiles() throws IOException {
-		log.info("get diff {}/{}", repoId.generateId(), prNumber);
-		return prService.getFiles(repoId, prNumber);
-	}
+    public List<CommitFile> getFiles() throws IOException {
+        log.info("get diff {}/{}", repoId.generateId(), prNumber);
+        return prService.getFiles(repoId, prNumber);
+    }
 
 }

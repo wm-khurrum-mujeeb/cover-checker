@@ -29,8 +29,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Line {
 
-	private int lineNumber;
-	private ModifyType type;
-	private String body;
+    private int lineNumber;
+    private ModifyType type;
+    private String body;
 
 }

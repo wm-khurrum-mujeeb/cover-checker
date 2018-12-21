@@ -31,11 +31,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiffSection {
-	private List<Line> lineList;
+    private List<Line> lineList;
 
-	public void addLine(Line line) {
-		if(lineList == null) lineList = new ArrayList<>();
+    public void addLine(Line line) {
+        if (lineList == null) lineList = new ArrayList<>();
 
-		lineList.add(line);
-	}
+        lineList.add(line);
+    }
 }
