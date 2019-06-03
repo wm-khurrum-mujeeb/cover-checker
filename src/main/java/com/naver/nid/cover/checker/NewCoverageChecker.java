@@ -50,7 +50,7 @@ public class NewCoverageChecker {
 				.filter(d -> d.getFileName().endsWith(".java"))
 				.filter(d -> !d.getDiffSectionList().isEmpty())
 				.peek(d -> logger.debug("diff file {}", d.getFileName()))
-				.peek(d -> d.setFileName(d.getFileName().replaceFirst("src/main/java/", "")))
+				.peek(d -> d.setFileName(d.getFileName().replaceFirst("(.*)?src/main/java/", "")))
 				.collect(Collectors.toMap(Diff::getFileName
 						, d -> d.getDiffSectionList().stream()
 								.flatMap(s -> s.getLineList().stream())

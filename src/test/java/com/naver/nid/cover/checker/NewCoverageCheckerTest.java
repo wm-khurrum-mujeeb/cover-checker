@@ -28,7 +28,8 @@ class NewCoverageCheckerTest {
 				, Line.builder().lineNumber(2).type(ModifyType.ADD).build());
 
 		List<DiffSection> diffSectionList = Collections.singletonList(DiffSection.builder().lineList(lines).build());
-		List<Diff> diffList = Collections.singletonList(Diff.builder().fileName("test.java").diffSectionList(diffSectionList).build());
+		List<Diff> diffList = Arrays.asList(Diff.builder().fileName("src/main/java/pkgA/test.java").diffSectionList(diffSectionList).build(),
+			Diff.builder().fileName("testModule/src/main/java/pkgB/test.java").diffSectionList(diffSectionList).build());
 
 
 		LineCoverageReport lineCoverageReport = new LineCoverageReport();
@@ -41,17 +42,28 @@ class NewCoverageCheckerTest {
 
 		FileCoverageReport fileCoverageReport = new FileCoverageReport();
 		fileCoverageReport.setType("java");
-		fileCoverageReport.setFileName("test.java");
+		fileCoverageReport.setFileName("pkgA/test.java");
 		fileCoverageReport.setLineCoverageReportList(Arrays.asList(lineCoverageReport, lineCoverageReport2));
-		List<FileCoverageReport> coverage = Collections.singletonList(fileCoverageReport);
+
+		FileCoverageReport fileCoverageReport2 = new FileCoverageReport();
+		fileCoverageReport2.setType("java");
+		fileCoverageReport2.setFileName("pkgB/test.java");
+		fileCoverageReport2.setLineCoverageReportList(Arrays.asList(lineCoverageReport, lineCoverageReport2));
+
+		List<FileCoverageReport> coverage = Arrays.asList(fileCoverageReport, fileCoverageReport2);
 
 		NewCoverageCheckReport newCoverageCheckReport = NewCoverageCheckReport.builder()
 				.threshold(60)
-				.totalNewLine(2)
-				.coveredNewLine(1)
+				.totalNewLine(4)
+				.coveredNewLine(2)
 				.coveredFilesInfo(
-						Collections.singletonList(NewCoveredFile.builder()
-								.name("test.java")
+						Arrays.asList(NewCoveredFile.builder()
+								.name("pkgA/test.java")
+								.addedLine(2)
+								.addedCoverLine(1)
+								.build(),
+							NewCoveredFile.builder()
+								.name("pkgB/test.java")
 								.addedLine(2)
 								.addedCoverLine(1)
 								.build()))
