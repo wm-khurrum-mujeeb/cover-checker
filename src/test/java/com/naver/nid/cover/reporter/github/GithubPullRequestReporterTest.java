@@ -26,7 +26,7 @@ class GithubPullRequestReporterTest {
 
 	private static final String COMMENT_WITH_FILE = "#### [PR Coverage check]\n" +
 			"\n" +
-			":heart_eyes: **pass** : 2 / 3 (66.67%)\n" +
+			":white_check_mark: **pass** : 2 / 3 (66.67%)\n" +
 			"\n" +
 			"\n" +
 			"\n\n" +
@@ -39,7 +39,7 @@ class GithubPullRequestReporterTest {
 
 	private static final String COMMENT_WITH_CONFUSE = "#### [PR Coverage check]\n" +
 			"\n" +
-			":confused: **check** : 2 / 3 (66.67%)\n" +
+			":question: **check** : 2 / 3 (66.67%)\n" +
 			"\n" +
 			"\n" +
 			"\n\n" +
@@ -52,11 +52,11 @@ class GithubPullRequestReporterTest {
 
 	private static final String COMMENT_WITHOUT_FILE = "#### [PR Coverage check]\n" +
 			"\n\n" +
-			":heart_eyes: **pass** : 0 / 0 (0%)\n\n\n";
+			":white_check_mark: **pass** : 0 / 0 (0%)\n\n\n";
 
 	private static final String COMMENT_ERROR = "#### [PR Coverage check]\n" +
 			"\n" +
-			"coverage check fail. please retry. :fearful:\n" +
+			"coverage check fail. please retry. :x:\n" +
 			"\n" +
 			"[Please let me know](https://github.com/naver/cover-checker/issues/new) when error again.\n" +
 			"\n" +
