@@ -23,10 +23,10 @@ public class ResultIcon {
 	public static final String CHECK_FILE_FAIL = ":red_circle:";
 
 
-	public static final String CHECK_ALL_PASS = ":heart_eyes:";
-	public static final String CHECK_ALL_FAIL = ":disappointed:";
-	public static final String CHECK_ALL_CONFUSE = ":confused:";
-	public static final String CHECK_ALL_ERROR = ":fearful:";
+	public static final String CHECK_ALL_PASS = ":white_check_mark:";
+	public static final String CHECK_ALL_FAIL = ":exclamation:";
+	public static final String CHECK_ALL_CONFUSE = ":question:";
+	public static final String CHECK_ALL_ERROR = ":x:";
 
 
 	private ResultIcon() {}
