@@ -27,7 +27,7 @@ class GithubStatusManagerTest {
 		CommitStatusCreate commitStatus = CommitStatusCreate.builder()
 				.state(CommitState.SUCCESS)
 				.description("0 / 0 (100%) - pass")
-				.context("coverchecker").build();
+				.context("Coverage Check").build();
 		RepositoryId repoId = new RepositoryId("test", "test");
 		when(commitService.createStatus(eq(repoId), eq("sha"), any(CommitStatus.class))).thenReturn(new CommitStatus().setDescription("0 / 0 (100%) - pass"));
 

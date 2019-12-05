@@ -100,12 +100,12 @@ public class GithubPullRequestReporter implements Reporter {
 			return CommitStatusCreate.builder()
 					.state(CommitState.ERROR)
 					.description("error - " + result.getError().getMessage())
-					.context("coverchecker").build();
+					.context("Coverage Check").build();
 		} else {
 			return CommitStatusCreate.builder()
 					.state(result.result().githubState)
 					.description(String.format("%d / %d (%d%%) - %s", result.getCoveredNewLine(), result.getTotalNewLine(), result.getCoverage(), result.result()))
-					.context("coverchecker").build();
+					.context("Coverage Check").build();
 		}
 	}
 

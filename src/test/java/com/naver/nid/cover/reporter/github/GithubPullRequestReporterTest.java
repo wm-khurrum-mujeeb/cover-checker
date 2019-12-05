@@ -89,7 +89,7 @@ class GithubPullRequestReporterTest {
 		CommitStatusCreate commitStatus = CommitStatusCreate.builder()
 				.state(CommitState.SUCCESS)
 				.description("2 / 3 (66%) - pass")
-				.context("coverchecker").build();
+				.context("Coverage Check").build();
 		doNothing().when(mockStatusManager).setStatus(commitStatus);
 
 		NewCoverageCheckReport result = NewCoverageCheckReport.builder()
@@ -116,7 +116,7 @@ class GithubPullRequestReporterTest {
 		CommitStatusCreate commitStatus = CommitStatusCreate.builder()
 				.state(CommitState.PENDING)
 				.description("2 / 3 (66%) - check")
-				.context("coverchecker").build();
+				.context("Coverage Check").build();
 		doNothing().when(mockStatusManager).setStatus(commitStatus);
 
 		NewCoverageCheckReport result = NewCoverageCheckReport.builder()
@@ -143,7 +143,7 @@ class GithubPullRequestReporterTest {
 		CommitStatusCreate commitStatus = CommitStatusCreate.builder()
 				.state(CommitState.SUCCESS)
 				.description("0 / 0 (100%) - pass")
-				.context("coverchecker").build();
+				.context("Coverage Check").build();
 		doNothing().when(mockStatusManager).setStatus(commitStatus);
 
 		NewCoverageCheckReport result = NewCoverageCheckReport.builder()
@@ -167,7 +167,7 @@ class GithubPullRequestReporterTest {
 		CommitStatusCreate commitStatus = CommitStatusCreate.builder()
 				.state(CommitState.ERROR)
 				.description("error - test error")
-				.context("coverchecker").build();
+				.context("Coverage Check").build();
 		doNothing().when(mockStatusManager).setStatus(commitStatus);
 
 		NewCoverageCheckReport result = NewCoverageCheckReport.builder()
